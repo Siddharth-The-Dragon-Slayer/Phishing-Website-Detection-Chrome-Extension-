@@ -433,8 +433,8 @@ class ReportManager {
             }
         }
     }
-}
-
+    }
+    
     toggleAutoRefresh() {
         this.autoRefresh = !this.autoRefresh;
         const btn = document.getElementById('autoRefreshBtn');

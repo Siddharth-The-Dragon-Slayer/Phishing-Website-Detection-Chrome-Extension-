@@ -28,20 +28,73 @@ class PhishingDetectorPopup {
             // Get current tab
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             
-            // Send message to content script for analysis
-            const response = await chrome.tabs.sendMessage(tab.id, { 
+            // Check if it's a chrome:// or other restricted URL
+            if (!tab.url || tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://') || tab.url.startsWith('edge://')) {
+                this.showError('Cannot analyze browser internal pages');
+                return;
+            }
+            
+            // Try to get analysis from storage first (faster)
+            const stored = await chrome.storage.local.get(['currentAnalysis']);
+            if (stored.currentAnalysis) {
+                this.displayAnalysis(stored.currentAnalysis);
+                return;
+            }
+            
+            // Send message to content script for analysis with timeout
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Timeout')), 3000)
+            );
+            
+            const messagePromise = chrome.tabs.sendMessage(tab.id, { 
                 action: 'analyzeCurrentSite' 
             });
+            
+            const response = await Promise.race([messagePromise, timeoutPromise]);
             
             if (response && response.analysis) {
                 this.displayAnalysis(response.analysis);
             } else {
-                this.showError('Unable to analyze current site');
+                // Fallback: analyze URL directly
+                await this.analyzeURLDirectly(tab.url);
             }
         } catch (error) {
             console.error('Error loading analysis:', error);
-            this.showError('Analysis failed');
+            // Try to get from storage as fallback
+            const stored = await chrome.storage.local.get(['currentAnalysis']);
+            if (stored.currentAnalysis) {
+                this.displayAnalysis(stored.currentAnalysis);
+            } else {
+                // Last resort: analyze URL directly
+                const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+                if (tab && tab.url) {
+                    await this.analyzeURLDirectly(tab.url);
+                } else {
+                    this.showError('Unable to analyze current site');
+                }
+            }
         }
+    }
+    
+    async analyzeURLDirectly(url) {
+        // Simple direct analysis when content script is not available
+        const detector = new SimplePhishingDetector();
+        const analysis = detector.analyzeURL(url);
+        
+        const formattedAnalysis = {
+            prediction: analysis.riskLevel === 'HIGH' ? 'phishing' : 'legitimate',
+            riskScore: analysis.riskScore,
+            riskLevel: analysis.riskLevel.toLowerCase(),
+            features: {
+                url_length: url.length,
+                has_https: url.startsWith('https://'),
+                domain: analysis.domain
+            },
+            riskFactors: analysis.riskFactors,
+            riskMessage: analysis.riskMessage
+        };
+        
+        this.displayAnalysis(formattedAnalysis);
     }
     
     displayAnalysis(analysis) {

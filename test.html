@@ -1,25 +1,261 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Test Phishing Detector</title>
+    <meta charset="utf-8">
+    <title>🛡️ Phishing Detector Test Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .container {
+            background: white;
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #2196F3;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .test-link {
+            display: block;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-left: 4px solid #2196F3;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .test-link:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-link.danger {
+            border-left-color: #f44336;
+        }
+        
+        .test-link.warning {
+            border-left-color: #FF9800;
+        }
+        
+        .test-link.safe {
+            border-left-color: #4CAF50;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .badge.high {
+            background: #f44336;
+            color: white;
+        }
+        
+        .badge.medium {
+            background: #FF9800;
+            color: white;
+        }
+        
+        .badge.low {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 15px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h1>🛡️ Phishing Detector Test Page</h1>
-    <p>This is a test page to verify the extension works.</p>
-    
-    <h2>Test URLs to try:</h2>
-    <ul>
-        <li><a href="http://example.com">HTTP site (should show warning)</a></li>
-        <li><a href="https://bit.ly/test">URL shortener (should show warning)</a></li>
-        <li><a href="https://google.com">Safe site (should be green)</a></li>
-    </ul>
-    
-    <p><strong>How to test:</strong></p>
-    <ol>
-        <li>Load the extension in Chrome</li>
-        <li>Visit different websites</li>
-        <li>Look for warning banners on risky sites</li>
-        <li>Click the extension icon to see detailed analysis</li>
-    </ol>
+    <div class="container">
+        <h1>🛡️ Phishing Detector Test Page</h1>
+        <p class="subtitle">Test the extension with various URL patterns</p>
+        
+        <div class="status">
+            ✅ Extension is active and monitoring this page
+        </div>
+        
+        <div class="test-section">
+            <h2>🚨 High-Risk Test URLs</h2>
+            <p>These should trigger HIGH risk warnings:</p>
+            
+            <a href="http://192.168.1.1/secure-login" class="test-link danger">
+                🔴 IP Address + HTTP + Suspicious Keywords
+                <span class="badge high">HIGH RISK</span>
+            </a>
+            
+            <a href="http://secure-account-verify.tk/login" class="test-link danger">
+                🔴 Suspicious TLD (.tk) + HTTP + Phishing Keywords
+                <span class="badge high">HIGH RISK</span>
+            </a>
+            
+            <a href="http://paypal-secure-verify-account-update-now.ml/confirm" class="test-link danger">
+                🔴 Multiple Keywords + Suspicious TLD + HTTP
+                <span class="badge high">HIGH RISK</span>
+            </a>
+        </div>
+        
+        <div class="test-section">
+            <h2>⚠️ Medium-Risk Test URLs</h2>
+            <p>These should trigger MEDIUM risk warnings:</p>
+            
+            <a href="https://bit.ly/test123" class="test-link warning">
+                🟡 URL Shortener (bit.ly)
+                <span class="badge medium">MEDIUM RISK</span>
+            </a>
+            
+            <a href="http://example.com/normal-page" class="test-link warning">
+                🟡 No HTTPS Encryption
+                <span class="badge medium">MEDIUM RISK</span>
+            </a>
+            
+            <a href="https://secure-login-verify.com/account" class="test-link warning">
+                🟡 Suspicious Keywords in URL
+                <span class="badge medium">MEDIUM RISK</span>
+            </a>
+        </div>
+        
+        <div class="test-section">
+            <h2>✅ Safe Test URLs</h2>
+            <p>These should show LOW risk (safe):</p>
+            
+            <a href="https://google.com" class="test-link safe">
+                🟢 Google (Trusted Domain + HTTPS)
+                <span class="badge low">LOW RISK</span>
+            </a>
+            
+            <a href="https://github.com" class="test-link safe">
+                🟢 GitHub (Trusted Domain + HTTPS)
+                <span class="badge low">LOW RISK</span>
+            </a>
+            
+            <a href="https://stackoverflow.com" class="test-link safe">
+                🟢 Stack Overflow (Trusted Domain + HTTPS)
+                <span class="badge low">LOW RISK</span>
+            </a>
+        </div>
+        
+        <div class="instructions">
+            <h2>📋 How to Test</h2>
+            <ol>
+                <li><strong>Load the Extension:</strong>
+                    <ul>
+                        <li>Go to <code>chrome://extensions/</code></li>
+                        <li>Enable "Developer mode"</li>
+                        <li>Click "Load unpacked" and select the extension folder</li>
+                    </ul>
+                </li>
+                <li><strong>Test Automatic Detection:</strong>
+                    <ul>
+                        <li>Click on the test links above</li>
+                        <li>Look for warning banners at the top of pages</li>
+                        <li>High-risk sites should show red warnings</li>
+                        <li>Medium-risk sites should show orange warnings</li>
+                    </ul>
+                </li>
+                <li><strong>Check the Popup:</strong>
+                    <ul>
+                        <li>Click the 🛡️ extension icon in the toolbar</li>
+                        <li>View detailed risk analysis</li>
+                        <li>See specific risk factors detected</li>
+                        <li>Check statistics (sites checked, threats blocked)</li>
+                    </ul>
+                </li>
+                <li><strong>Test Badge Updates:</strong>
+                    <ul>
+                        <li>Watch the extension icon badge change colors</li>
+                        <li>Green ✓ = Safe site</li>
+                        <li>Orange ! = Medium risk</li>
+                        <li>Red ⚠ = High risk</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔍 What to Look For</h2>
+            <ul>
+                <li>✅ Warning banners appear on risky sites</li>
+                <li>✅ Popup shows accurate risk scores</li>
+                <li>✅ Risk factors are listed correctly</li>
+                <li>✅ Badge icon updates based on risk level</li>
+                <li>✅ Statistics increment properly</li>
+                <li>✅ Warnings can be dismissed</li>
+                <li>✅ No errors in browser console</li>
+            </ul>
+        </div>
+        
+        <div class="instructions">
+            <h2>🐛 Troubleshooting</h2>
+            <ul>
+                <li><strong>No warnings showing:</strong> Refresh the page after loading the extension</li>
+                <li><strong>Popup not working:</strong> Make sure you're not on a chrome:// page</li>
+                <li><strong>Console errors:</strong> Check Developer Tools (F12) for error messages</li>
+                <li><strong>Extension not loading:</strong> Verify all files are present and no syntax errors</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f5f5f5; border-radius: 10px;">
+            <h3>✨ Extension Features</h3>
+            <p>Real-time Protection • Visual Warnings • Risk Analysis • Statistics Tracking</p>
+            <p style="color: #666; font-size: 14px; margin-top: 10px;">
+                Made with ❤️ for MLDL Mini Project
+            </p>
+        </div>
+    </div>
 </body>
 </html>

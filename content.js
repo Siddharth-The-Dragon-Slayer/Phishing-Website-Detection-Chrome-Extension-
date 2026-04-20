@@ -18,13 +18,20 @@ class PhishingDetector {
         // Monitor for navigation changes
         let currentURL = window.location.href;
         
-        // Check for URL changes (for SPAs)
-        setInterval(() => {
+        // Check for URL changes (for SPAs) - store interval ID for cleanup
+        this.monitoringInterval = setInterval(() => {
             if (window.location.href !== currentURL) {
                 currentURL = window.location.href;
                 this.analyzeCurrentPage();
             }
-        }, 1000);
+        }, 2000); // Changed to 2 seconds to reduce overhead
+        
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (this.monitoringInterval) {
+                clearInterval(this.monitoringInterval);
+            }
+        });
     }
     
     analyzeCurrentPage() {
@@ -68,17 +75,6 @@ class PhishingDetector {
         };
     }
     
-    hasSuspiciousTLD(domain) {
-        const suspiciousTLDs = ['.tk', '.ml', '.ga', '.cf', '.click', '.download'];
-        return suspiciousTLDs.some(tld => domain.endsWith(tld));
-    }
-    
-    isShortURL(domain) {
-        const shorteners = ['bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'ow.ly'];
-        return shorteners.includes(domain);
-    }
-    
-    // Helper methods for feature extraction
     hasSuspiciousTLD(domain) {
         const suspiciousTLDs = ['.tk', '.ml', '.ga', '.cf', '.click', '.download'];
         return suspiciousTLDs.some(tld => domain.endsWith(tld));
@@ -176,10 +172,6 @@ class PhishingDetector {
             console.error('Error updating stats:', error);
         }
     }
-    
-
-    
-
 }
 
 // Message listener for popup communication
